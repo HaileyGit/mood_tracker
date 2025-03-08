@@ -6,26 +6,13 @@ import 'firebase_options.dart';
 import 'routes/app_router.dart';
 import 'constants/app_colors.dart';
 
-// Firebase 인스턴스를 전역 변수로 선언
-late final FirebaseApp app;
-late final FirebaseAuth auth;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Firebase 초기화를 명시적으로 수행
-  app = await Firebase.initializeApp(
+  // Firebase 초기화
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  // Firebase Auth 인스턴스 초기화
-  auth = FirebaseAuth.instanceFor(app: app);
-
-  // 인증 상태 확인을 위해 잠시 대기
-  await Future.delayed(const Duration(seconds: 1));
-
-  // 개발 중에는 Firebase Auth 에뮬레이터 사용 가능
-  // await auth.useAuthEmulator('localhost', 9099);
 
   runApp(
     const ProviderScope(
@@ -46,7 +33,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.light(
           primary: AppColors.primary,
           secondary: AppColors.secondary,
-          background: AppColors.background,
           surface: AppColors.cardBackground,
           error: AppColors.error,
         ),

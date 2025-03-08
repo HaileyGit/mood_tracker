@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../view_models/auth_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -25,8 +26,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           }
         },
         error: (error, stackTrace) {
+          String errorMessage;
+          if (error is FirebaseAuthException &&
+              error.code == 'email-already-in-use') {
+            errorMessage = '이미 사용 중인 이메일입니다. 다른 이메일을 사용하세요.';
+          } else {
+            errorMessage = '회원가입 중 오류가 발생했습니다: ${error.toString()}';
+          }
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error.toString())),
+            SnackBar(content: Text(errorMessage)),
           );
         },
       );

@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../repositories/auth_repository.dart';
-import '../main.dart';
 
 final authViewModelProvider =
     StateNotifierProvider<AuthViewModel, AsyncValue<User?>>((ref) {
-  return AuthViewModel(AuthRepository(auth));
+  return AuthViewModel(AuthRepository(FirebaseAuth.instance));
 });
 
 class AuthViewModel extends StateNotifier<AsyncValue<User?>> {
@@ -37,11 +36,8 @@ class AuthViewModel extends StateNotifier<AsyncValue<User?>> {
     try {
       state = const AsyncValue.loading();
       print('AuthViewModel: 회원가입 시작');
-
-      final credential = await _repository.signUp(email, password);
-      print('AuthViewModel: 회원가입 성공 - uid: ${credential.user?.uid}');
-
-      state = AsyncValue.data(credential.user);
+      final userCredential = await _repository.signUp(email, password);
+      state = AsyncValue.data(userCredential.user);
     } catch (e) {
       print('AuthViewModel: 회원가입 실패 - $e');
       state = AsyncValue.error(e, StackTrace.current);
@@ -52,8 +48,10 @@ class AuthViewModel extends StateNotifier<AsyncValue<User?>> {
   Future<void> signOut() async {
     try {
       await _repository.signOut();
+      state = const AsyncValue.data(null);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
+      rethrow;
     }
   }
 }

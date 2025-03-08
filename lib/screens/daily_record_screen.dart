@@ -75,12 +75,6 @@ class _DailyRecordScreenState extends ConsumerState<DailyRecordScreen> {
           onPressed: () => context.go('/home'),
         ),
         title: const Text('오늘의 기록'),
-        actions: [
-          TextButton(
-            onPressed: _saveRecord,
-            child: const Text('저장'),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -225,6 +219,25 @@ class _DailyRecordScreenState extends ConsumerState<DailyRecordScreen> {
               maxLines: 3,
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ElevatedButton(
+          onPressed: _saveRecord,
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: const Text(
+            '저장하기',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
